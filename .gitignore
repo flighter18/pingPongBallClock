@@ -1,4 +1,8 @@
 .vscode/arduino.json
 .vscode/c_cpp_properties.json
+code/apikeys.txt
 code/lanceapikeys
+code/webpagesettings.txt
+code/settings.txt
+code/setup.sh
 .vscode/settings.json
