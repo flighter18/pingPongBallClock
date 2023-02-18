@@ -53,18 +53,31 @@ class PingPongBoard:
 
 	# Sets up a ball object for every single ball on the board. The ball object definition can be found in Utils
 	def setupBalls(self):
-		for y in range(self.num_rows):
-			for x in range(self.num_cols):
-				self.balls[y][x] = Ball([y,x],self.boardType)    #passes [row,col], and the type of board which is used for the ledAdresses
-
-	# Actually lights a specic ball (LED) with the color provided to the function. This will check to see if the color is different than the one already set for the ball first. If it is the same then it will not rewrite.
+	    print(self.boardType)
+	    print(self.num_cols)
+	    for y in range(self.num_rows):
+		    for x in range(self.num_cols):
+			    #print(range(self.num_cols))
+			    self.balls[y][x] = Ball([y,x],self.boardType)    #passes [row,col], and the type of board which is used for the ledAdresses
+			    #print("col ist ", x , "Row is ",  y)
+			    
+			    #print(self.balls[x])
+			    #last_row = self.balls[-1]
+			    #last_element = last_row[-1]
+			    #print(last_element)	   		   
+ 
+    # Actually lights a specic ball (LED) with the color provided to the function. This will check to see if the color is different than the one already set for the ball first. If it is the same then it will not rewrite.
 	def writeBallColor(self,col,row,color):
+		#print("col ist ", col , "Row is ",  row)
 		# Do not proceed if bad coordinates (could maybe replace with try/catch)
 		if col < 0 or col >= self.num_cols or row < 0 or row >= self.num_rows:
+			#print("if loop col is ", col , "Row is ",  row)
+			
 			return
 
 		# If the color is different than what the buffer has stored, write it and show it
 		if self.balls[row][col].color != color:
+			#print((self.balls[row][col].ledNum*PIXEL_RATIO))
 			self.strip.setPixelColor((self.balls[row][col].ledNum)*PIXEL_RATIO,color)
 			self.balls[row][col].color = color
 
@@ -106,6 +119,7 @@ class PingPongBoard:
 				else:
 					self.writeBallTextState(col+x,row+y,False)	#write the text to false so that it will be overwritten
 		self.strip.show()
+
 
 		# Returns the distance to the next character. Used for display string length calcs and to find the location of the next character.
 		return distanceToNext
@@ -179,7 +193,7 @@ class PingPongBoard:
 			elif self.bgColor[1] == "twinkle":
 				self.twinkle()
 		elif self.bgColor[0] == "solid" and self.bgDisplayChanged:
-			# print "writing BG color..."	#debugging
+			#print("writing BG color...")	#debugging
 			self.colorFill(self.bgColor[1])
 		self.bgDisplayChanged = False
 
@@ -280,7 +294,7 @@ class PingPongBoard:
 			for y in range(self.num_rows):
 				i = x*self.num_rows + y
 				if self.balls[y][x].text == False:
-					self.writeBallColor(x,y,self.wheel((((i*PIXEL_RATIO)/(self.num_balls*PIXEL_RATIO))+j) & 255))
+					self.writeBallColor(x,y,self.wheel(int(((((i*PIXEL_RATIO)/(self.num_balls*PIXEL_RATIO))+j))) & 255))
 		self.strip.show()
 		time.sleep(wait_ms/1000.0)
 
@@ -293,7 +307,7 @@ class PingPongBoard:
 			for y in range(self.num_rows):
 				i = x*self.num_rows + y
 				if self.balls[y][x].text == True:
-					self.writeBallColor(x,y,self.wheel((((i*PIXEL_RATIO)/(self.num_balls*PIXEL_RATIO))+j) & 255))
+					self.writeBallColor(x,y,self.wheel(int(((((i*PIXEL_RATIO)/(self.num_balls*PIXEL_RATIO))+j))) & 255))
 		self.strip.show()
 		time.sleep(wait_ms/1000.0)
 
@@ -533,19 +547,19 @@ class PingPongBoard:
 			'boardType'  : self.boardType,
 			'lineCount'  : self.lineCount
 		}
-
+		print(self.brightness)
 		# Dump the settings to settings.txt
-		with open('/home/pi/pingPongBallClock/code/settings.txt', 'w') as filehandle:
+		with open('/root/pingPongBallClock/code/settings.txt', 'w') as filehandle:
 			json.dump(settings, filehandle)
 
 	# This will load the settings from settings.txt
 	def loadSettings(self,bootup=True):
 		# Get the settings dictionary from settings.txt
-		with open('/home/pi/pingPongBallClock/code/settings.txt', 'r') as filehandle:
+		with open('/root/pingPongBallClock/code/settings.txt', 'r') as filehandle:
 			settings = json.load(filehandle)
 
 		# Get the API keys from apikeys.txt
-		with open('/home/pi/pingPongBallClock/code/apikeys.txt', 'r') as filehandle:
+		with open('/root/pingPongBallClock/code/apikeys.txt', 'r') as filehandle:
 			apikeys = json.load(filehandle)
 		
 		# Set the API Key variables
@@ -590,7 +604,7 @@ class PingPongBoard:
 				self.textOrigin[1] = [1,7]
 
 		# Calculate the LED count
-		self.led_count = self.num_balls * PIXEL_RATIO
+		self.led_count = self.num_balls * PIXEL_RATIO * 2
 
 		# Address possible font change
 		if self.fontName == 'slanted':
