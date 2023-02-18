@@ -109,7 +109,7 @@ def setContent():
 	elif checked == 'false' and (contentChunk in PPB.content) == True:
 		PPB.content.remove(contentChunk)
 
-	print PPB.content
+	print (PPB.content)
 	PPB.textStateWipe()
 	return ""
 
@@ -138,7 +138,7 @@ def setWeather():
 def updateSettings():
 	# Read the values from the POST
 	action = str(request.form['action'])
-
+	print(action)
 	if action == 'save':
 		PPB.dumpSettings()
 	elif action == 'load':
@@ -151,6 +151,7 @@ def updateSettings():
 def setBrightness():
 	# Read the values from the POST
 	brightness = int(request.form['brightness'])
+	print(brightness)
 
 	PPB.strip.setBrightness(brightness)
 
@@ -171,13 +172,13 @@ def setTimeFormat():
 def updateWebPageSettings():
 	if request.method == 'GET':
 		# Get the web page settings from webpagesettings.txt
-		with open('/home/pi/pingPongBallClock/code/webpagesettings.txt', 'r') as filehandle:
+		with open('/root/pingPongBallClock/code/webpagesettings.txt', 'r') as filehandle:
 			return filehandle.read()
 	
 	elif request.method == 'POST':
 		settings = str(request.form['settings'])
 		# Write the settings to webpagesettings.txt
-		with open('/home/pi/pingPongBallClock/code/webpagesettings.txt', 'w') as filehandle:
+		with open('/root/pingPongBallClock/code/webpagesettings.txt', 'w') as filehandle:
 			filehandle.write(settings)
 		return ""
 
@@ -211,7 +212,7 @@ def setXLSettings():
 			PPB.textOrigin[0] = [4,1]
 			PPB.textOrigin[1] = [1,7]
 	else: 
-		print "Board is not set to XL"
+		print ("Board is not set to XL")
 
 	# Perform a reset of the board to eliminate the ghost text balls
 	PPB.colorFill(Color(0,0,0), True)
